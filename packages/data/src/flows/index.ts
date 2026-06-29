@@ -1,4 +1,4 @@
-// Ingestion flows. runScan is exported directly from the package root; the FMP
-// ingestion flows (buildUniverse, backfill, dailyUpdate, forwardUpdate) are
-// added in M3.
-export {};
+export { buildUniverse, type BuildUniverseOptions } from './buildUniverse.js';
+export { backfillSymbols, type BackfillResult, type BackfillOptions } from './backfill.js';
+export { dailyUpdate, type DailyUpdateOptions } from './dailyUpdate.js';
+export { forwardUpdate, type ForwardUpdateOptions } from './forwardUpdate.js';

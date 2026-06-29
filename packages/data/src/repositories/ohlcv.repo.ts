@@ -25,16 +25,21 @@ export async function upsertBars(symbol: string, bars: Bar[]): Promise<number> {
  * Ingest an FMP EOD-bulk CSV (columns: symbol,date,open,low,high,close,adjClose,
  * volume) directly via DuckDB. The path is internally generated (safe to embed).
  */
-export async function ingestEodBulkCsv(csvPath: string): Promise<number> {
+export async function ingestEodBulkCsv(
+	csvPath: string,
+	opts: { onlyUniverse?: boolean } = {}
+): Promise<number> {
 	const escaped = csvPath.replace(/'/g, "''");
 	const before = (await queryScalar<number>('SELECT count(*) FROM ohlcv_daily')) ?? 0;
+	// The bulk file spans all asset classes; optionally keep only universe symbols.
+	const filter = opts.onlyUniverse ? 'WHERE symbol IN (SELECT symbol FROM symbols)' : '';
 	await exec(
 		`INSERT OR REPLACE INTO ohlcv_daily (symbol, date, open, high, low, close, adj_close, volume)
 		 SELECT symbol, CAST(date AS DATE), open, high, low, close, adjClose, CAST(volume AS BIGINT)
 		 FROM read_csv('${escaped}', header = true, columns = {
 			'symbol': 'VARCHAR', 'date': 'VARCHAR', 'open': 'DOUBLE', 'low': 'DOUBLE',
 			'high': 'DOUBLE', 'close': 'DOUBLE', 'adjClose': 'DOUBLE', 'volume': 'DOUBLE'
-		 })`
+		 }) ${filter}`
 	);
 	const after = (await queryScalar<number>('SELECT count(*) FROM ohlcv_daily')) ?? 0;
 	return after - before;
