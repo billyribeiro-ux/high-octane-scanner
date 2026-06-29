@@ -1,0 +1,9 @@
+node_modules
+dist
+build
+.svelte-kit
+.output
+coverage
+pnpm-lock.yaml
+data
+*.duckdb

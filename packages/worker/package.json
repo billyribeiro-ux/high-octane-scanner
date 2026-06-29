@@ -1,0 +1,23 @@
+{
+  "name": "@scanner/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "seed": "tsx src/scripts/seed.ts",
+    "scan": "tsx src/scripts/scan.ts",
+    "job": "tsx src/scripts/job.ts"
+  },
+  "dependencies": {
+    "@scanner/core": "workspace:*",
+    "@scanner/data": "workspace:*",
+    "dotenv": "^17.4.2",
+    "node-cron": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1"
+  }
+}

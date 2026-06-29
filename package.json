@@ -1,0 +1,48 @@
+{
+  "name": "high-octane-scanner",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @scanner/web dev",
+    "build": "pnpm --filter @scanner/web build",
+    "preview": "pnpm --filter @scanner/web preview",
+    "worker:dev": "pnpm --filter @scanner/worker dev",
+    "worker:start": "pnpm --filter @scanner/worker start",
+    "dev:all": "concurrently -k -n web,worker -c blue,green \"pnpm dev\" \"pnpm worker:dev\"",
+    "db:migrate": "pnpm --filter @scanner/data migrate",
+    "seed": "pnpm --filter @scanner/worker seed --",
+    "scan:now": "pnpm --filter @scanner/worker scan",
+    "job:now": "pnpm --filter @scanner/worker job",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "pnpm -r --if-present check",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.0.1",
+    "concurrently": "^10.0.3",
+    "eslint": "^10.6.0",
+    "eslint-plugin-svelte": "^3.20.0",
+    "globals": "^17.7.0",
+    "prettier": "^3.9.3",
+    "prettier-plugin-svelte": "^4.1.1",
+    "prettier-plugin-tailwindcss": "^0.8.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.0",
+    "vitest": "^4.1.9"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@duckdb/node-bindings",
+      "@duckdb/node-bindings-linux-x64"
+    ]
+  }
+}
