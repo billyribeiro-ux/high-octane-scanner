@@ -1,0 +1,25 @@
+{
+  "name": "@scanner/data",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "migrate": "tsx src/db/migrate.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@duckdb/node-api": "1.5.4-r.1",
+    "@scanner/core": "workspace:*",
+    "dotenv": "^17.4.2",
+    "papaparse": "^5.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "@types/papaparse": "^5.5.2"
+  }
+}

@@ -17,8 +17,8 @@ build/
 .netlify/
 .wrangler/
 
-# Local data: DuckDB file + scratch CSV downloads
-data/
+# Local data: DuckDB file + scratch CSV downloads (repo-root only, not packages/data)
+/data/
 *.duckdb
 *.duckdb.wal
 
