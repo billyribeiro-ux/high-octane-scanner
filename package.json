@@ -15,6 +15,7 @@
     "dev:all": "concurrently -k -n web,worker -c blue,green \"pnpm dev\" \"pnpm worker:dev\"",
     "db:migrate": "pnpm --filter @scanner/data migrate",
     "seed": "pnpm --filter @scanner/worker seed --",
+    "seed:demo": "pnpm --filter @scanner/worker seed:demo",
     "scan:now": "pnpm --filter @scanner/worker scan",
     "job:now": "pnpm --filter @scanner/worker job",
     "test": "vitest run",
