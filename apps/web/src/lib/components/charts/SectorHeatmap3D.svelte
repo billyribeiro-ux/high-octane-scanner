@@ -31,22 +31,29 @@
 
 <div class="overflow-hidden rounded-lg border border-border bg-card" style="height:{height}px">
 	{#if browser && data.length > 0}
-		<Canvas>
-			<T.PerspectiveCamera makeDefault position={[7, 8, 10]} fov={48}>
-				<OrbitControls enableDamping autoRotate autoRotateSpeed={0.5} target={[0, 1.2, 0]} />
-			</T.PerspectiveCamera>
-			<T.AmbientLight intensity={0.7} />
-			<T.DirectionalLight position={[6, 12, 8]} intensity={1.3} />
-			<T.GridHelper args={[24, 24, '#334155', '#1e293b']} />
-			{#each data as d, i (d.sector)}
-				{@const h = barHeight(d.count)}
-				{@const p = tilePos(i)}
-				<T.Mesh position={[p[0], h / 2, p[1]]} castShadow>
-					<T.BoxGeometry args={[1.15, h, 1.15]} />
-					<T.MeshStandardMaterial color={color(d.net)} metalness={0.1} roughness={0.6} />
-				</T.Mesh>
-			{/each}
-		</Canvas>
+		<svelte:boundary>
+			<Canvas>
+				<T.PerspectiveCamera makeDefault position={[7, 8, 10]} fov={48}>
+					<OrbitControls enableDamping autoRotate autoRotateSpeed={0.5} target={[0, 1.2, 0]} />
+				</T.PerspectiveCamera>
+				<T.AmbientLight intensity={0.7} />
+				<T.DirectionalLight position={[6, 12, 8]} intensity={1.3} />
+				<T.GridHelper args={[24, 24, '#334155', '#1e293b']} />
+				{#each data as d, i (d.sector)}
+					{@const h = barHeight(d.count)}
+					{@const p = tilePos(i)}
+					<T.Mesh position={[p[0], h / 2, p[1]]} castShadow>
+						<T.BoxGeometry args={[1.15, h, 1.15]} />
+						<T.MeshStandardMaterial color={color(d.net)} metalness={0.1} roughness={0.6} />
+					</T.Mesh>
+				{/each}
+			</Canvas>
+			{#snippet failed()}
+				<div class="flex h-full items-center justify-center text-sm text-muted-foreground">
+					3D view unavailable (WebGL not supported)
+				</div>
+			{/snippet}
+		</svelte:boundary>
 	{:else}
 		<div class="flex h-full items-center justify-center text-sm text-muted-foreground">
 			{data.length === 0 ? 'No signals to map' : 'Loading 3D view…'}
