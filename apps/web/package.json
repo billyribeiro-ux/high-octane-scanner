@@ -13,6 +13,7 @@
 		"test:e2e": "playwright test"
 	},
 	"dependencies": {
+		"@duckdb/node-api": "1.5.4-r.1",
 		"@scanner/core": "workspace:*",
 		"@scanner/data": "workspace:*",
 		"@tanstack/svelte-query": "^6.1.36",

@@ -50,6 +50,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@duckdb/node-api':
+        specifier: 1.5.4-r.1
+        version: 1.5.4-r.1
       '@scanner/core':
         specifier: workspace:*
         version: link:../../packages/core
