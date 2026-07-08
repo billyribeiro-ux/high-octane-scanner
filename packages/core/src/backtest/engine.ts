@@ -131,7 +131,9 @@ export function runBacktestWithSignals(
 					barsHeld,
 					pnl,
 					pnlPct,
-					rMultiple
+					rMultiple,
+					maePct: 0,
+					mfePct: 0
 				});
 				pos = null;
 				posStack = null;

@@ -99,6 +99,10 @@ export interface Trade {
 	pnlPct: number;
 	/** Profit/loss expressed in units of initial risk (needs `stopLossPct`). */
 	rMultiple: number;
+	/** Max adverse excursion while the trade was open, signed fraction (<= 0). */
+	maePct: number;
+	/** Max favorable excursion while the trade was open, fraction (>= 0). */
+	mfePct: number;
 }
 
 export interface EquityPoint {

@@ -161,7 +161,9 @@ export function runPortfolioBacktest(
 				barsHeld,
 				pnl,
 				pnlPct,
-				rMultiple: risk && risk > 0 ? grossRet / risk : 0
+				rMultiple: risk && risk > 0 ? grossRet / risk : 0,
+				maePct: 0,
+				mfePct: 0
 			});
 			open.delete(st.symbol);
 		}
