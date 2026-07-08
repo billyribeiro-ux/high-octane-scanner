@@ -12,7 +12,7 @@ import { DEFAULT_BACKTEST_CONFIG } from '../types.js';
 import { detectSignalsForSeries } from '../signals/detect.js';
 import { isBearishStack, isBullishStack } from '../signals/stack.js';
 import { computeMetrics } from '../metrics/metrics.js';
-import { computeLevels, evaluateExit } from './exits.js';
+import { computeLevels, evaluateExit, updateExcursions, type ExcursionState } from './exits.js';
 
 export interface SymbolSeries {
 	symbol: string;
@@ -36,6 +36,7 @@ interface PortfolioPosition {
 	/** Capital committed to this position (fixed notional bucket). */
 	alloc: number;
 	posStack: StackType | null;
+	exc: ExcursionState;
 }
 
 interface SymbolState {
@@ -123,6 +124,7 @@ export function runPortfolioBacktest(
 			const idx = st.dateToIndex.get(date);
 			if (idx === undefined) continue;
 			const bar = st.bars[idx] as Bar;
+			updateExcursions(pos.exc, pos.sign, pos.entryPrice, bar);
 			const barsHeld = idx - pos.entryIdx;
 			const isLast = idx === st.bars.length - 1;
 			const fd = st.freshDir[idx];
@@ -162,8 +164,8 @@ export function runPortfolioBacktest(
 				pnl,
 				pnlPct,
 				rMultiple: risk && risk > 0 ? grossRet / risk : 0,
-				maePct: 0,
-				mfePct: 0
+				maePct: pos.exc.mae,
+				mfePct: pos.exc.mfe
 			});
 			open.delete(st.symbol);
 		}
@@ -194,7 +196,8 @@ export function runPortfolioBacktest(
 				stop,
 				target,
 				alloc,
-				posStack: intent.stack
+				posStack: intent.stack,
+				exc: { mae: 0, mfe: 0 }
 			});
 		}
 

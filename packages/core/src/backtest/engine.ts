@@ -12,7 +12,13 @@ import { DEFAULT_BACKTEST_CONFIG } from '../types.js';
 import { detectSignalsForSeries } from '../signals/detect.js';
 import { isBearishStack, isBullishStack } from '../signals/stack.js';
 import { computeMetrics } from '../metrics/metrics.js';
-import { computeLevels, evaluateExit, type OpenPosition } from './exits.js';
+import {
+	computeLevels,
+	evaluateExit,
+	updateExcursions,
+	type ExcursionState,
+	type OpenPosition
+} from './exits.js';
 
 type StackType = 'bull' | 'bear';
 
@@ -63,6 +69,7 @@ export function runBacktestWithSignals(
 	let peak = equity;
 	let pos: OpenPosition | null = null;
 	let posStack: StackType | null = null;
+	let posExcursions: ExcursionState = { mae: 0, mfe: 0 };
 	let pending: PendingEntry | null = null;
 
 	for (let i = 0; i < n; i++) {
@@ -86,11 +93,13 @@ export function runBacktestWithSignals(
 				lastMark: entryPrice
 			};
 			posStack = pending.stack;
+			posExcursions = { mae: 0, mfe: 0 };
 			pending = null;
 		}
 
 		// 2. Manage an open position.
 		if (pos) {
+			updateExcursions(posExcursions, pos.sign, pos.entryPrice, bar);
 			const barsHeld = i - pos.entryIndex;
 			const isLast = i === n - 1;
 			const fd = freshDir[i];
@@ -132,8 +141,8 @@ export function runBacktestWithSignals(
 					pnl,
 					pnlPct,
 					rMultiple,
-					maePct: 0,
-					mfePct: 0
+					maePct: posExcursions.mae,
+					mfePct: posExcursions.mfe
 				});
 				pos = null;
 				posStack = null;

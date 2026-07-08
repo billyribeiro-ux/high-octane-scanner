@@ -100,6 +100,18 @@ describe('runBacktestWithSignals — deterministic 3-trade fixture', () => {
 		expect(result.equityCurve).toHaveLength(10);
 	});
 
+	it('tracks MAE/MFE per trade (hand-computed from bar extremes)', () => {
+		// Trade A (entry 100, bars 1-2): lows 98 → MAE -2%; highs 105,125 → MFE +25%.
+		expect(result.trades[0]?.maePct).toBeCloseTo(-0.02, 10);
+		expect(result.trades[0]?.mfePct).toBeCloseTo(0.25, 10);
+		// Trade B (entry 100, bars 4-5): lows 96,85 → MAE -15%; high 104 → MFE +4%.
+		expect(result.trades[1]?.maePct).toBeCloseTo(-0.15, 10);
+		expect(result.trades[1]?.mfePct).toBeCloseTo(0.04, 10);
+		// Trade C (entry 100, bars 7-9): lows 98,97,104 → MAE -3%; highs 103,104,112 → MFE +12%.
+		expect(result.trades[2]?.maePct).toBeCloseTo(-0.03, 10);
+		expect(result.trades[2]?.mfePct).toBeCloseTo(0.12, 10);
+	});
+
 	it('derives aggregate metrics that match hand calculation', () => {
 		const m = result.metrics;
 		expect(m.winRate).toBeCloseTo(2 / 3, 6);

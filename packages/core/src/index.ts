@@ -17,7 +17,13 @@ export { detectSignalsForSeries, latestSignal } from './signals/detect.js';
 // Backtest
 export { runBacktest, runBacktestWithSignals } from './backtest/engine.js';
 export { runPortfolioBacktest, type SymbolSeries } from './backtest/portfolio.js';
-export { computeLevels, evaluateExit, type OpenPosition } from './backtest/exits.js';
+export {
+	computeLevels,
+	evaluateExit,
+	updateExcursions,
+	type ExcursionState,
+	type OpenPosition
+} from './backtest/exits.js';
 
 // Metrics
 export { computeMetrics, type MetricsOptions } from './metrics/metrics.js';

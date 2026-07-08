@@ -40,6 +40,34 @@ export function computeLevels(
 	return levels;
 }
 
+/** Running MAE/MFE extremes for an open position, as signed fractions of entry. */
+export interface ExcursionState {
+	/** Most adverse excursion so far (<= 0). */
+	mae: number;
+	/** Most favorable excursion so far (>= 0). */
+	mfe: number;
+}
+
+/**
+ * Fold one bar's full high/low range into a position's running excursion
+ * extremes. LONG: adverse = low, favorable = high; SHORT mirrors with the
+ * sign flipped (adverse = price up). Starting from `{ mae: 0, mfe: 0 }`
+ * keeps `mae <= 0` and `mfe >= 0` by construction.
+ */
+export function updateExcursions(
+	state: ExcursionState,
+	sign: 1 | -1,
+	entryPrice: number,
+	bar: Bar
+): void {
+	const adversePrice = sign === 1 ? bar.low : bar.high;
+	const favorablePrice = sign === 1 ? bar.high : bar.low;
+	const adverse = sign * (adversePrice / entryPrice - 1);
+	const favorable = sign * (favorablePrice / entryPrice - 1);
+	if (adverse < state.mae) state.mae = adverse;
+	if (favorable > state.mfe) state.mfe = favorable;
+}
+
 export interface ExitFlags {
 	/** A fresh opposite-direction signal fired on this bar. */
 	oppositeFreshSignal: boolean;
